@@ -1,0 +1,100 @@
+<div class="d-flex flex-column h-100" id="wrapper">
+    <div id="page-content-wrapper" class="w-100 p-4" style="min-height: 60vh;">
+        <h2 class="ms-3">Zona Administrador</h2>
+        <div class="container mt-5 mb-5">
+            <div class="row row-cols-2 g-3">
+                <div class="col">
+                    <button class="btn btn-primary w-100 p-4" routerLink="/gestionArticulos"
+                        routerLinkActive="active">Artículos</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-success w-100 p-4" routerLink="/gestionBeneficiarios"
+                        routerLinkActive="active">Gestion Beneficiarios</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary w-100 p-4" routerLink="/gestionEmpresas"
+                        routerLinkActive="active">Gestion Donantes</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-danger w-100 p-4" routerLink="/gestionTransportes"
+                        routerLinkActive="active">Gestion Transportes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <h5 class="card-title">Total Donaciones</h5>
+            <h2 class="card-text">{{totalDonaciones}}</h2>
+            <p class="mb-0">Este mes: {{donacionesMes}}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h5 class="card-title">Kg Alimentos Salvados</h5>
+            <h2 class="card-text">{{kgSalvados}}</h2>
+            <p class="mb-0">Valor estimado: {{valorEstimado}}€</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <div class="card bg-warning">
+          <div class="card-body">
+            <h5 class="card-title">Empresas Activas</h5>
+            <h2 class="card-text">{{empresasActivas}}</h2>
+            <p class="mb-0">Nuevas este mes: {{empresasNuevas}}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <h5 class="card-title">Bancos Registrados</h5>
+            <h2 class="card-text">{{bancosRegistrados}}</h2>
+            <p class="mb-0">En espera: {{bancosEspera}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5 class="mb-0">Últimas Actividades</h5>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Usuario</th>
+              <th>Acción</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let actividad of ultimasActividades">
+              <td>{{actividad.fecha}}</td>
+              <td>{{actividad.tipo}}</td>
+              <td>{{actividad.usuario}}</td>
+              <td>{{actividad.accion}}</td>
+              <td>
+                <span [class]="'badge bg-' + actividad.estadoClass">
+                  {{actividad.estado}}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div> -->

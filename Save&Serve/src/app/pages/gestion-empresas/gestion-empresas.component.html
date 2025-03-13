@@ -1,0 +1,144 @@
+<div class="container mt-4">
+  <h2 class="mb-3 text-center">Gestión de Donantes</h2>
+
+    
+      <form [formGroup]="empresaForm" (ngSubmit)="agregarEmpresa()" class="p-4 border rounded bg-light">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Nombre</label>
+            <input type="text" formControlName="nombre" class="form-control" placeholder="Nombre">
+            <small class="text-danger" *ngIf="empresaForm.get('nombre')?.errors?.['required'] && empresaForm.get('nombre')?.touched">
+              El nombre es obligatorio.
+            </small>
+            <small class="text-danger" *ngIf="empresaForm.get('nombre')?.errors?.['minlength'] && empresaForm.get('nombre')?.touched">
+              Debe tener al menos 3 caracteres.
+            </small>
+          </div>
+    
+          <div class="col-md-6">
+            <label class="form-label">Teléfono</label>
+            <input type="text" formControlName="telefono" class="form-control" placeholder="Teléfono">
+            <small class="text-danger" *ngIf="empresaForm.get('telefono')?.errors?.['required'] && empresaForm.get('telefono')?.touched">
+              El teléfono es obligatorio.
+            </small>
+            <small class="text-danger" *ngIf="empresaForm.get('telefono')?.errors?.['pattern'] && empresaForm.get('telefono')?.touched">
+              Formato incorrecto (Ej: 600123456).
+            </small>
+          </div>
+    
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" formControlName="email" class="form-control" placeholder="Email">
+            <small class="text-danger" *ngIf="empresaForm.get('email')?.errors?.['required'] && empresaForm.get('email')?.touched">
+              El email es obligatorio.
+            </small>
+            <small class="text-danger" *ngIf="empresaForm.get('email')?.errors?.['email'] && empresaForm.get('email')?.touched">
+              Formato de email inválido.
+            </small>
+          </div>
+    
+          <div class="col-md-6">
+            <label class="form-label">CIF</label>
+            <input type="text" formControlName="cif" class="form-control" placeholder="CIF">
+            <small class="text-danger" *ngIf="empresaForm.get('cif')?.errors?.['required'] && empresaForm.get('cif')?.touched">
+              El CIF es obligatorio.
+            </small>
+            <small class="text-danger" *ngIf="empresaForm.get('cif')?.errors?.['pattern'] && empresaForm.get('cif')?.touched">
+              CIF inválido (Ej: B12345678).
+            </small>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Dirección</label>
+            <input type="text" formControlName="direccion" class="form-control" placeholder="Dirección">
+          </div>
+    
+          <div class="col-md-6">
+            <label class="form-label">Ciudad</label>
+            <select formControlName="ciudad" class="form-control">
+              <option value="" disabled selected>Selecciona una ciudad</option>
+              <option *ngFor="let ciudad of ciudades" [value]="ciudad">{{ ciudad }}</option>
+            </select>
+            <small class="text-danger" *ngIf="empresaForm.get('ciudad')?.errors?.['required'] && empresaForm.get('ciudad')?.touched">
+              Debe seleccionar una ciudad.
+            </small>
+          </div>
+    
+          <div class="col-md-6">
+            <label class="form-label">Tipo de Empresa</label>
+            <select formControlName="tipo" class="form-control">
+              <option value="" disabled selected>Selecciona un tipo</option>
+              <option *ngFor="let tipo of tiposDeEmpresa" [value]="tipo">{{ tipo }}</option>
+            </select>
+            <small class="text-danger" *ngIf="empresaForm.get('tipo')?.errors?.['required'] && empresaForm.get('tipo')?.touched">
+              Debe seleccionar un tipo de empresa.
+            </small>
+          </div>
+    
+          <div class="col-md-6">
+            <label class="form-label">Contraseña</label>
+            <input type="password" formControlName="contrasenia" class="form-control" placeholder="Contraseña">
+            <small class="text-danger" *ngIf="empresaForm.get('contrasenia')?.errors?.['required'] && empresaForm.get('contrasenia')?.touched">
+              La contraseña es obligatoria.
+            </small>
+            <small class="text-danger" *ngIf="empresaForm.get('contrasenia')?.errors?.['minlength'] && empresaForm.get('contrasenia')?.touched">
+              Debe tener al menos 6 caracteres.
+            </small>
+          </div>
+    
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary" [disabled]="empresaForm.invalid">
+              {{ modoEdicion ? 'Editar Empresa' : 'Agregar Empresa' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    
+    
+  
+    <div *ngIf="mensaje" class="alert alert-success mt-3">
+      {{ mensaje }}
+    </div>
+  
+  
+
+  <table class="table table-hover text-center align-middle mt-4 mb-5">
+    <thead class="table-dark">
+      <tr>
+        <th>Nombre</th>
+        <th>Telefono</th>
+        <th>Dirección</th>
+        <th>Email</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let empresa of empresas">
+        <td><strong>{{ empresa.nombre }}</strong></td>
+        <td>{{ empresa.telefono }}</td>
+        <td>{{ empresa.direccion }}</td>
+        <td>{{ empresa.email }}</td>
+        <td>
+          <span class="badge" [ngClass]="esValidada(empresa) ? 'bg-success' : 'bg-danger'">
+            <i class="bi" [ngClass]="esValidada(empresa) ? 'bi-check-circle' : 'bi-x-circle'"></i>
+            {{ esValidada(empresa) ? 'Validado' : 'No validado' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-sm" [ngClass]="esValidada(empresa) ? 'btn-outline-danger' : 'btn-outline-success'"
+            (click)="toggleValidacion(empresa)">
+            <i class="bi" [ngClass]="esValidada(empresa) ? 'bi-x-circle' : 'bi-check-circle'"></i>
+            {{ esValidada(empresa) ? ' Quitar' : ' Validar' }}
+          </button>
+          <button class="btn btn-sm btn-outline-primary ms-2" (click)="editarEmpresa(empresa)">
+            <i class="bi bi-pencil">Editar</i>
+          </button>
+          <button class="btn btn-sm btn-outline-secondary ms-2" (click)="eliminarEmpresa(empresa.id!)">
+            <i class="bi bi-trash">Eliminar</i>
+          </button>
+          
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

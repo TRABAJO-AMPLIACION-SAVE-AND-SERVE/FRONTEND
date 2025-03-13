@@ -1,0 +1,31 @@
+@import "bootstrap/scss/functions";  
+@import "bootstrap/scss/variables"; 
+
+$btn-size: 65px; 
+$warning-color: $warning; 
+$hover-shadow: rgba(255, 193, 7, 0.6); 
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: $warning-color;
+  color: white;
+  border: none;
+  width: $btn-size;
+  height: $btn-size;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 30px; 
+  box-shadow: 2px 2px 10px rgba(255, 193, 7, 0.4); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: darken($warning-color, 10%);
+    transform: scale(1.15);
+    box-shadow: 4px 4px 15px $hover-shadow; 
+  }
+}

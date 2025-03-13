@@ -1,0 +1,39 @@
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h1 class="text-center mb-3">Edicion Perfil</h1>
+        <h2 class="text-center mb-4 text-primary">{{ bancoAlimentos.nombre }}</h2>
+        <div class="p-4 border rounded-lg shadow">
+          <div class="form-group mb-3" *ngFor="let field of ['nombre','direccion', 'telefono', 'email', 'ciudad']">
+            <div class="row align-items-center">
+              <div class="col-4">
+                <label class="font-weight-bold">{{field | titlecase}}:</label>
+              </div>
+              <div class="col-8">
+                @if (!editing[field]) {
+                  <div class="d-flex align-items-center">
+                    <span class="flex-grow-1">{{bancoAlimentos[field]}}</span>
+                    <button class="btn btn-link btn-sm text-primary p-0 ms-2" (click)="startEditing(field)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                  </div>
+                } @else {
+                  <div class="input-group">
+                    <input [(ngModel)]="bancoAlimentos[field]" class="form-control form-control-sm" [placeholder]="'Ingrese ' + field">
+                    <button class="btn btn-outline-secondary btn-sm" (click)="cancelEdit(field)" type="button">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            @if (hasChanges) {
+            <button class="btn btn-success mt-3" (click)="saveChanges()">Validar Cambios</button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

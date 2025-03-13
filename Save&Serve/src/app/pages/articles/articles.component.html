@@ -1,0 +1,51 @@
+<!-- <app-hero-section-blog></app-hero-section-blog>
+
+<div class="container my-5">
+  <div id="articulos-container" class="row">
+    <div *ngFor="let articulo of articulos" class="col-md-6 mb-4">
+      <div class="card h-100">
+        <img 
+          [src]="articulo.imagen" 
+          [alt]="articulo.titulo" 
+          class="card-img-top object-fit-cover" 
+          style="height: 300px;">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a [routerLink]="['/articulo-detalle', articulo.idArticulo]" class="text-decoration-none text-dark">
+              {{ articulo.titulo }}
+            </a>
+          </h5>
+          <p class="card-text">
+          </p>
+          <a [routerLink]="['/articulo-detalle', articulo.idArticulo]" class="btn btn-primary">
+            Read more
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<app-hero-section-blog></app-hero-section-blog>
+
+<div class="container my-5">
+  <div id="articulos-container" class="row">
+    <div *ngFor="let articulo of articulos" class="col-md-6 mb-4">
+      <div class="card h-100">
+        <img [src]="getImagenUrl(articulo.imagen)" [alt]="articulo.titulo" class="card-img-top object-fit-cover"
+          style="height: 300px;">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a [routerLink]="['/articulo-detalle', articulo.idArticulo]" class="text-decoration-none text-dark">
+              {{ articulo.titulo }}
+            </a>
+          </h5>
+          <p class="card-text">
+          </p>
+          <a [routerLink]="['/articulo-detalle', articulo.idArticulo]" class="btn btn-primary">
+            Read more
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

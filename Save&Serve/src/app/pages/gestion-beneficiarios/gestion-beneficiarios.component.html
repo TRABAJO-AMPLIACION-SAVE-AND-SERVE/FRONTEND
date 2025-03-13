@@ -1,0 +1,133 @@
+<div class="container mt-4">
+  <h2 class="mb-3 text-center">Gestión de Beneficiarios</h2>
+
+  <form *ngIf="beneficiarioForm" [formGroup]="beneficiarioForm" (ngSubmit)="agregarBeneficiario()"
+    class="p-4 border rounded bg-light">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Nombre</label>
+        <input type="text" formControlName="nombre" class="form-control" placeholder="Nombre">
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('nombre')?.errors?.['required'] && beneficiarioForm.get('nombre')?.touched">
+          El nombre es obligatorio.
+        </small>
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('nombre')?.errors?.['minlength'] && beneficiarioForm.get('nombre')?.touched">
+          Debe tener al menos 3 caracteres.
+        </small>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Teléfono</label>
+        <input type="text" formControlName="telefono" class="form-control" placeholder="Teléfono">
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('telefono')?.errors?.['required'] && beneficiarioForm.get('telefono')?.touched">
+          El teléfono es obligatorio.
+        </small>
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('telefono')?.errors?.['pattern'] && beneficiarioForm.get('telefono')?.touched">
+          Formato incorrecto (Ej: 600123456).
+        </small>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email" formControlName="email" class="form-control" placeholder="Email">
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('email')?.errors?.['required'] && beneficiarioForm.get('email')?.touched">
+          El email es obligatorio.
+        </small>
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('email')?.errors?.['email'] && beneficiarioForm.get('email')?.touched">
+          Formato de email inválido.
+        </small>
+      </div>
+
+
+      <div class="col-md-6">
+        <label class="form-label">Dirección</label>
+        <input type="text" formControlName="direccion" class="form-control" placeholder="Dirección">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Ciudad</label>
+        <select formControlName="ciudad" class="form-control">
+          <option value="" disabled selected>Selecciona una ciudad</option>
+          <option *ngFor="let ciudad of ciudades" [value]="ciudad">{{ ciudad }}</option>
+        </select>
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('ciudad')?.errors?.['required'] && beneficiarioForm.get('ciudad')?.touched">
+          Debe seleccionar una ciudad.
+        </small>
+      </div>
+
+
+
+      <div class="col-md-6">
+        <label class="form-label">Contraseña</label>
+        <input type="password" formControlName="contrasenia" class="form-control" placeholder="Contraseña">
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('contrasenia')?.errors?.['required'] && beneficiarioForm.get('contrasenia')?.touched">
+          La contraseña es obligatoria.
+        </small>
+        <small class="text-danger"
+          *ngIf="beneficiarioForm.get('contrasenia')?.errors?.['minlength'] && beneficiarioForm.get('contrasenia')?.touched">
+          Debe tener al menos 6 caracteres.
+        </small>
+      </div>
+
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary" [disabled]="beneficiarioForm.invalid">
+          {{ modoEdicion ? 'Editar Empresa' : 'Agregar Empresa' }}
+        </button>
+      </div>
+    </div>
+  </form>
+
+
+
+  <div *ngIf="mensaje" class="alert alert-success mt-3">
+    {{ mensaje }}
+  </div>
+
+  <table class="table table-hover text-center align-middle mt-4 mb-5">
+    <thead class="table-dark">
+      <tr>
+        <th>Nombre</th>
+        <th>Telefono</th>
+        <th>Dirección</th>
+        <th>Email</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let beneficiario of beneficiarios">
+        <td><strong>{{ beneficiario.nombre }}</strong></td>
+        <td>{{ beneficiario.telefono }}</td>
+        <td>{{ beneficiario.direccion }}</td>
+        <td>{{ beneficiario.email }}</td>
+        <td>
+          <span class="badge" [ngClass]="esValidada(beneficiario) ? 'bg-success' : 'bg-danger'">
+            <i class="bi" [ngClass]="esValidada(beneficiario) ? 'bi-check-circle' : 'bi-x-circle'"></i>
+            {{ esValidada(beneficiario) ? 'Validado' : 'No validado' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-sm" [ngClass]="esValidada(beneficiario) ? 'btn-outline-danger' : 'btn-outline-success'"
+            (click)="toggleValidacion(beneficiario)">
+            <i class="bi" [ngClass]="esValidada(beneficiario) ? 'bi-x-circle' : 'bi-check-circle'"></i>
+            {{ esValidada(beneficiario) ? ' Quitar' : ' Validar' }}
+          </button>
+          <button class="btn btn-sm btn-outline-primary ms-2" (click)="editarBeneficiario(beneficiario)">
+            <i class="bi bi-pencil">Editar</i>
+          </button>
+          <button class="btn btn-sm btn-outline-secondary ms-2" (click)="eliminarBeneficiario(beneficiario.id!)">
+            <i class="bi bi-trash">Eliminar</i>
+          </button>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

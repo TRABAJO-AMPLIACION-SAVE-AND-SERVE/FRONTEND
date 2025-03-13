@@ -1,0 +1,180 @@
+<!-- 
+<div class="container mt-5">
+    <h1 class="text-center">Gestión de Artículos</h1>
+    <p class="text-center text-muted">Agrega un nuevo artículo.</p>
+  
+    <form [formGroup]="articuloForm" (ngSubmit)="guardarArticulo()">
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título del Artículo</label>
+        <input type="text"
+               class="form-control"
+               id="titulo"
+               formControlName="titulo"
+               [ngClass]="{'is-invalid': articuloForm.get('titulo')?.invalid && articuloForm.get('titulo')?.touched}">
+        <div class="invalid-feedback">
+          El título es obligatorio y debe tener entre 5 y 100 caracteres.
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="subtitulo" class="form-label">Subtítulo</label>
+        <input type="text"
+               class="form-control"
+               id="subtitulo"
+               formControlName="subtitulo"
+               [ngClass]="{'is-invalid': articuloForm.get('subtitulo')?.invalid && articuloForm.get('subtitulo')?.touched}">
+        <div class="invalid-feedback">
+          El subtítulo es obligatorio y debe tener entre 4 y 100 caracteres.
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="contenido" class="form-label">Texto del Artículo</label>
+        <textarea class="form-control"
+                  id="contenido"
+                  rows="5"
+                  formControlName="contenido"
+                  [ngClass]="{'is-invalid': articuloForm.get('contenido')?.invalid && articuloForm.get('contenido')?.touched}"></textarea>
+        <div class="invalid-feedback">
+          El texto es obligatorio y debe tener al menos 20 caracteres.
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="imagen" class="form-label">Imagen</label>
+        <input type="file"
+               class="form-control"
+               id="imagen"
+               accept="image/*"
+               (change)="onImagenSeleccionada($event)"
+               [ngClass]="{'is-invalid': articuloForm.get('imagen')?.invalid && articuloForm.get('imagen')?.touched}">
+        <div class="invalid-feedback">
+          Por favor, selecciona una imagen válida.
+        </div>
+      </div>
+  
+      <div class="text-center">
+        <button type="submit"
+                class="btn btn-primary mt-3 mb-5"
+                [disabled]="articuloForm.invalid || !imagenSeleccionada">
+          Guardar Artículo
+        </button>
+      </div>
+    </form>
+  </div>
+   -->
+
+   <!-- gestion-articulos.component.html -->
+<div class="container mt-5">
+  <h1 class="text-center">Gestión de Artículos</h1>
+  <p class="text-center text-muted">
+    {{ modoEdicion ? 'Edita el artículo seleccionado' : 'Agrega un nuevo artículo' }}
+  </p>
+
+  <!-- Formulario -->
+  <form [formGroup]="articuloForm" (ngSubmit)="guardarArticulo()">
+    <div class="mb-3">
+      <label for="titulo" class="form-label">Título del Artículo</label>
+      <input type="text"
+             class="form-control"
+             id="titulo"
+             formControlName="titulo"
+             [ngClass]="{'is-invalid': articuloForm.get('titulo')?.invalid && articuloForm.get('titulo')?.touched}">
+      <div class="invalid-feedback">
+        El título es obligatorio y debe tener entre 5 y 100 caracteres.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="subtitulo" class="form-label">Subtítulo</label>
+      <input type="text"
+             class="form-control"
+             id="subtitulo"
+             formControlName="subtitulo"
+             [ngClass]="{'is-invalid': articuloForm.get('subtitulo')?.invalid && articuloForm.get('subtitulo')?.touched}">
+      <div class="invalid-feedback">
+        El subtítulo es obligatorio y debe tener entre 4 y 100 caracteres.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="contenido" class="form-label">Texto del Artículo</label>
+      <textarea class="form-control"
+                id="contenido"
+                rows="5"
+                formControlName="contenido"
+                [ngClass]="{'is-invalid': articuloForm.get('contenido')?.invalid && articuloForm.get('contenido')?.touched}">
+      </textarea>
+      <div class="invalid-feedback">
+        El texto es obligatorio y debe tener al menos 20 caracteres.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="imagen" class="form-label">Imagen</label>
+      <input type="file"
+             class="form-control"
+             id="imagen"
+             accept="image/*"
+             (change)="onImagenSeleccionada($event)"
+             [ngClass]="{'is-invalid': articuloForm.get('imagen')?.invalid && articuloForm.get('imagen')?.touched}">
+      <div class="invalid-feedback">
+        Por favor, selecciona una imagen válida.
+      </div>
+    </div>
+
+    <div class="text-center mb-5">
+      <button type="submit"
+              class="btn btn-primary me-2"
+              [disabled]="articuloForm.invalid || (!imagenSeleccionada && !modoEdicion)">
+        {{ modoEdicion ? 'Actualizar Artículo' : 'Guardar Artículo' }}
+      </button>
+      <button *ngIf="modoEdicion"
+              type="button"
+              class="btn btn-secondary"
+              (click)="resetForm()">
+        Cancelar Edición
+      </button>
+    </div>
+  </form>
+
+  <!-- Listado de Artículos -->
+  <div class="mt-5">
+    <h2 class="text-center mb-4">Listado de Artículos</h2>
+    
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Subtítulo</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let articulo of articulos">
+            <td>{{ articulo.titulo }}</td>
+            <td>{{ articulo.subtitulo }}</td>
+            <td>
+              <img [src]="getImagenUrl(articulo.imagen)" 
+                   alt="Imagen del artículo" 
+                   class="img-thumbnail" 
+                   style="max-width: 100px;">
+            </td>
+            <td>
+              <button class="btn btn-sm btn-primary me-2" 
+                      (click)="editarArticulo(articulo)">
+                Editar
+              </button>
+              <button class="btn btn-sm btn-danger"
+                      (click)="eliminarArticulo(articulo.idArticulo!)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

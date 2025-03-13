@@ -1,0 +1,408 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
+    <div class="container-fluid">
+        <img src="assets/IMG/logo.png" width="50px"><a class="navbar-brand p-20" href="index.html"> Save &
+            Serve</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2"
+            aria-controls="offcanvasNavbar2" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-start bg-dark" tabindex="-1" id="offcanvasNavbar2"
+            aria-labelledby="offcanvasNavbar2Label">
+
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cardAndButton">Como trabajamos?</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/articles" routerLinkActive="active">Blog</a>
+                    </li>
+
+                    <li class="nav-item dropdown ">
+                        <a class="nav-link dropdown-toggle" href="#" id="getInvolvedDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Involucrate
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark bg-dark" aria-labelledby="getInvolvedDropdown">
+                            <li><a class="dropdown-item text-white" routerLink="/hazteVoluntario"
+                                    routerLinkActive="active">Hazte Voluntario</a></li>
+                            <li><a class="dropdown-item text-white" href="#offcanvasRegister" routerLink="/informacionEmpresas" routerLinkActive="active"
+                                    data-bs-toggle="offcanvas">Empresas</a></li>
+                            <li><a class="dropdown-item text-white" routerLink="/suscription" routerLinkActive="active"
+                                    data-bs-toggle="offcanvas">
+                                    Suscripciones</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <form class="d-flex mt-3 mt-lg-0" role="search">
+                        <input class="form-control me-2 rounded-pill border-2 border-dark" type="search"
+                            placeholder="Buscar" aria-label="Search">
+                        <button class="btn btn-dark rounded-pill text-white border-2 border-white" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 
+                                1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg>
+                        </button>
+                    </form><br>
+                </ul>
+                  <!-- CONTROLAR ESTO SOLO Empresa/Donante -->
+                  <a class="btn btn-dark text-white" routerLink="/empresas-donacion" routerLinkActive="active"
+                  data-bs-toggle="offcanvas">
+                  Zona Empresa</a>
+                <!-- CONTROLAR ESTO SOLO ADMIN -->
+                <a class="btn btn-dark text-white" routerLink="/zonaAdmin" routerLinkActive="active"
+                    data-bs-toggle="offcanvas">
+                    Zona Admin</a>
+
+                <a class="btn btn-primary text-white" data-bs-toggle="offcanvas" href="#offcanvasLogin" role="button"
+                    aria-controls="offcanvasLogin">Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+    <div>
+    </div>
+</nav>
+<!-- Login -->
+<div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="offcanvasLogin"
+    aria-labelledby="offcanvasLoginLabel" data-bs-backdrop="true">
+
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasLoginLabel">Iniciar sesión</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+
+    </div>
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <div class="mb-3">
+          <label for="floatingInput" class="form-label">Dirección Email</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="floatingInput" 
+            name="email"
+            [(ngModel)]="loginData.email"
+            placeholder="name@example.com" 
+            required
+          >
+        </div>
+      
+        <div class="mb-3">
+          <label for="floatingPassword" class="form-label">Contraseña</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="floatingPassword" 
+            name="password"
+            [(ngModel)]="loginData.password"
+            placeholder="Password" 
+            required
+          >
+        </div>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="!loginForm.form.valid">
+          Iniciar Sesión
+        </button>
+      </form>
+
+        <div class="text-center mt-3">
+            <a href="#offcanvasForgotPassword" data-bs-toggle="offcanvas"
+                class="text-white text-decoration-underline">Olvidaste tu contraseña?</a><br>
+
+            ¿No tienes cuenta? <a class="btn btn-p text-white text-decoration-underline" data-bs-toggle="offcanvas"
+                href="#offcanvasOpciones" role="button" aria-controls="offcanvasExample">Registrate</a>
+        </div>
+    </div>
+</div>
+<!-- Opciones Registro Leti -->
+
+<div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="offcanvasOpciones"
+    aria-labelledby="offcanvasOpcionesLabel" data-bs-backdrop="true">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasOpcionesLabel">Opciones</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+
+        <!-- Este es el boton que redirige al registro de la entidad Empresa / Donante-->
+        <div class="mb-4 text-center">
+            <label for="donante" class="form-label fs-5 fw-bold">Contrata nuestros servicios</label>
+        </div>
+        <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary btn-lg" id="donanteButton" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasRegisterDonante">
+                <span id="donanteButtonText">Ser Donante</span>
+                <span id="donanteButtonSpinner" class="spinner-border spinner-border-sm d-none" role="status"
+                    aria-hidden="true"></span>
+            </button>
+        </div>
+        <hr class="my-5 text-secondary">
+
+        <!-- Este es el boton que redirige al registro de la entidad Banco de Alimentos / Beneficiario-->
+        <div class="mb-4 text-center">
+            <label for="beneficiario" class="form-label fs-5 fw-bold">Recibe nuestras donaciones</label>
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg" id="beneficiarioButton" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasRegisterBeneficiario">
+                <span id="beneficiarioButtonText">Ser Beneficiario</span>
+                <span id="beneficiarioButtonSpinner" class="spinner-border spinner-border-sm d-none" role="status"
+                    aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Registro Empresa // Donante -->
+<div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="offcanvasRegisterDonante"
+    aria-labelledby="offcanvasRegisterDonanteLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRegisterDonanteLabel">Registrate como Donante</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form class="p-3 " action="#">
+            <div class="mb-3">
+                <label for="nombreEmpresa" class="form-label">Nombre Empresa</label>
+                <input type="text" class="form-control" id="nombreEmpresa" name="nombreEmpresa"
+                    placeholder="Introduce el nombre de tu empresa" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="TipoEmpresa" class="form-label">Tipo empresa</label>
+                <input type="text" class="form-control" id="TipoEmpresa" name="TipoEmpresa"
+                    placeholder="Hotel, supermercado, restaurante..." required>
+            </div>
+
+            <div class="mb-3">
+                <label for="telefonoEmpresa" class="form-label">Teléfono</label>
+                <input type="tel" class="form-control" id="telefonoEmpresa" name="telefonoEmpresa"
+                    placeholder="Introduce el número de teléfono" required>
+            </div>
+            <div class="mb-3">
+                <label for="emailEmpresa" class="form-label">Email</label>
+                <input type="emailEmpresa" class="form-control" id="emailEmpresa" name="emailEmpresa"
+                    placeholder="name@example.com" required>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <input type="radio" class="btn-check" name="plan-options" id="planBasic" value="BASIC"
+                    autocomplete="off" (change)="selectPlan('BASICA')">
+                <label class="btn btn-outline-warning" for="planBasic">Plan Básico</label>
+
+                <input type="radio" class="btn-check" name="plan-options" id="planStandard" value="STANDARD"
+                    autocomplete="off" (change)="selectPlan('ESTANDAR')">
+                <label class="btn btn-outline-warning" for="planStandard">Plan Standar</label>
+
+                <input type="radio" class="btn-check" name="plan-options" id="planPremium" value="PREMIUM"
+                    autocomplete="off" (change)="selectPlan('PREMIUM')">
+                <label class="btn btn-outline-warning" for="planPremium">Plan Premium</label>
+            </div>
+
+            <script>
+                document.querySelectorAll('input[name="plan-options"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        console.log('Plan seleccionado:', e.target.value);
+                    });
+                });
+
+            </script>
+            
+
+            <div class="form-check mb-3  mt-3 d-flex justify-content-center gap-3">
+                <label class="form-check-label fs-6" for="terms">
+                    Más información de <a routerLink="/suscription" routerLinkActive="active"
+                        class="text-decoration-underline text-white fs-6">nuestros planes
+                    </a>
+                </label>
+            </div>
+
+            <div class="mb-3">
+                <label for="CIFEmpresa" class="form-label">CIF</label>
+                <input type="CIFEmpresa" class="form-control" id="CIFEmpresa" name="CIFEmpresa"
+                    placeholder="Introduce tu CIF">
+            </div>
+
+            <div class="mb-3">
+                <label for="direccionEmpresa" class="form-label">Direccion</label>
+                <input type="direccionEmpresa" class="form-control" id="direccionEmpresa" name="direccionEmpresa"
+                    placeholder="Direccion empresa">
+            </div>
+
+            <div class="mb-3">
+                <label for="ciudadEmpresa" class="form-label">Ciudad</label>
+                <input type="ciudadEmpresa" class="form-control" id="ciudadEmpresa" name="ciudadEmpresa"
+                    placeholder="Ciudad">
+            </div>
+
+
+            <div class="mb-3">
+                <label for="contraseñaEmpresa" class="form-label">Contraseña</label>
+                <input type="contraseñaEmpresa" class="form-control" id="contraseñaEmpresa" name="contraseñaEmpresa"
+                    placeholder="Introduce tu contraseña" required>
+            </div>
+
+            <div class="form-check mb-3 d-flex justify-content-center gap-3">
+                <input class="form-check-input" type="checkbox" value="" id="terms" required>
+                <label class="form-check-label fs-6" for="terms">
+                    Yo acepto los
+                    <a href="#" class="text-decoration-underline text-white fs-6" data-bs-toggle="modal"
+                        data-bs-target="#termsModal">
+                        términos y condiciones
+                    </a>
+                </label>
+            </div>
+            <button type="button" class="btn btn-primary w-100" routerLink="/pasarelaPago" rout data-bs-toggle="modal"
+                data-bs-target="#registerModal" routerLinkActive="active" data-bs-dismiss="offcanvas">
+                Registrarse
+            </button>
+        </form>
+    </div>
+</div>
+<!-- Modal de Términos y Condiciones -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="termsModalLabel">Términos y Condiciones</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bienvenido a nuestro servicio. Al aceptar estos términos, te comprometes a usar nuestra
+                    plataforma de manera responsable.</p>
+                <p><strong>1. Uso adecuado:</strong> No puedes usar el servicio para actividades ilícitas.
+                </p>
+                <p><strong>2. Protección de datos:</strong> Tus datos están seguros con nosotros y solo se
+                    usarán para mejorar tu experiencia.</p>
+                <p><strong>3. Cambios en los términos:</strong> Podemos actualizar estos términos en
+                    cualquier momento.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Registro Bancos de alimentos // Beneficiario -->
+<div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="offcanvasRegisterBeneficiario"
+    aria-labelledby="offcanvasRegisterBeneficiarioLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRegisterBeneficiarioLabel">Registrate como Beneficiario</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form class="p-3 " action="#">
+            <div class="mb-3">
+                <label for="nombreBeneficiario" class="form-label">Nombre Beneficiario</label>
+                <input type="text" class="form-control" id="nombreBeneficiario" name="nombreBeneficiario"
+                    placeholder="Introduce el nombre de tu organización" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="telefonoBeneficiario" class="form-label">Teléfono</label>
+                <input type="tel" class="form-control" id="telefonoBeneficiario" name="telefonoBeneficiario"
+                    placeholder="Introduce el número de teléfono" required>
+            </div>
+            <div class="mb-3">
+                <label for="emailBeneficiario" class="form-label">Email</label>
+                <input type="emailBeneficiario" class="form-control" id="emailBeneficiario" name="emailBeneficiario"
+                    placeholder="name@example.com" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="CIFBeneficiario" class="form-label">CIF</label>
+                <input type="CIFBeneficiario" class="form-control" id="CIFBeneficiario" name="CIFBeneficiario"
+                    placeholder="Introduce tu CIF">
+            </div>
+
+            <div class="mb-3">
+                <label for="direccionBeneficiario" class="form-label">Direccion</label>
+                <input type="direccionBeneficiario" class="form-control" id="direccionBeneficiario"
+                    name="direccionBeneficiario" placeholder="Direccion ">
+            </div>
+
+            <div class="mb-3">
+                <label for="ciudadBeneficiario" class="form-label">Ciudad</label>
+                <input type="ciudadBeneficiario" class="form-control" id="ciudadBeneficiario" name="ciudadBeneficiario"
+                    placeholder="Ciudad">
+            </div>
+
+            <div class="mb-3">
+                <label for="contraseñaBneficiario" class="form-label">Contraseña</label>
+                <input type="contraseñaBneficiario" class="form-control" id="contraseñaBneficiario"
+                    name="contraseñaBneficiario" placeholder="Introduce tu contraseña" required>
+            </div>
+
+            <div class="form-check mb-3 d-flex justify-content-center gap-3">
+                <input class="form-check-input" type="checkbox" value="" id="terms" required>
+                <label class="form-check-label fs-6" for="terms">
+                    Yo acepto los
+                    <a href="#" class="text-decoration-underline text-white fs-6" data-bs-toggle="modal"
+                        data-bs-target="#termsModal">
+                        términos y condiciones
+                    </a>
+                </label>
+            </div>
+            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#registerModal"
+                data-bs-dismiss="offcanvas">
+                Registrarse
+            </button>
+        </form>
+    </div>
+</div>
+<!-- Modal de Términos y Condiciones -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="termsModalLabel">Términos y Condiciones</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bienvenido a nuestro servicio. Al aceptar estos términos, te comprometes a usar nuestra
+                    plataforma de manera responsable.</p>
+                <p><strong>1. Uso adecuado:</strong> No puedes usar el servicio para actividades ilícitas.
+                </p>
+                <p><strong>2. Protección de datos:</strong> Tus datos están seguros con nosotros y solo se
+                    usarán para mejorar tu experiencia.</p>
+                <p><strong>3. Cambios en los términos:</strong> Podemos actualizar estos términos en
+                    cualquier momento.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Contraseña Olvidada   -->
+<div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="offcanvasForgotPassword"
+    aria-labelledby="offcanvasForgotPasswordLabel" data-bs-backdrop="true">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasForgotPasswordLabel">Recuperar Contraseña</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form class="p-3 needs-validation" id="forgotPasswordForm" novalidate>
+            <div class="mb-3">
+                <label for="email" class="form-label">Dirección de Email </label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required
+                    aria-describedby="emailHelp">
+                <div class="invalid-feedback">
+                    Porfavor introduce una dirección de email valida.
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" id="sendButton">
+                <span id="sendButtonText">Enviar</span>
+                <span id="sendButtonSpinner" class="spinner-border spinner-border-sm d-none" role="status"
+                    aria-hidden="true"></span>
+            </button>
+        </form>
+    </div>
+</div>

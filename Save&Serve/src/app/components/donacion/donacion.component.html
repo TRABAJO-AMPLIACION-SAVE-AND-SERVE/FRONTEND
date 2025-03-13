@@ -1,0 +1,122 @@
+<div class="container-fluid mt-4 mb-5">
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title">Mis Donaciones</h5>
+    </div>
+    <!-- <div class="card-body">
+        @if (loadingDonaciones) {
+          <div class="d-flex justify-content-center align-items-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+
+        } @else if (errorDonaciones) {
+          <div class="alert alert-danger">{{errorDonaciones}}</div>
+        } @else if (donaciones.length === 0) {
+          <div class="alert alert-info">No se han realizado donaciones aún</div> -->
+    <div class="card-body">
+      @if (loadingDonaciones) {
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+
+      } @else {
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Banco de Alimentos</th>
+              <th>Transporte</th>
+              <th>Total Donación</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (donacion of donaciones; track donacion.id) {
+            <tr>
+              <td>{{donacion.fechaEntrega | date:'dd/MM/yyyy'}}</td>
+              <td>{{donacion.bancoDeAlimentos.nombre}}</td>
+              <td>{{donacion.transporte.nombreTransporte}}</td>
+              <td>{{donacion.totalDonacion | number:'1.2-2'}} €</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                              'bg-warning': donacion.estadoEnvio === 'PENDIENTE',
+                              'bg-success': donacion.estadoEnvio === 'ENVIADO',
+                              'bg-danger': donacion.estadoEnvio === 'ENTREGADO'
+                            }">
+                  {{donacion.estadoEnvio}}
+                </span>
+              </td>
+              <td>
+                <!-- <button class="btn btn-sm btn-info" (click)="verDetalleDonacion(donacion)">
+                        Ver Detalle
+                      </button> -->
+                <button class="btn btn-sm btn-info"  (click)="verDetalleDonacion(donacion)">
+                  Ver Detalle
+                </button>
+
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Detalles de Donación -->
+<div class="modal" id="detalleModal" tabindex="-1" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content shadow-lg border-0 rounded-3">
+      <div class="modal-header bg-dark text-dark rounded-top">
+        <h5 class="modal-title text-white">Detalles de Donación</h5>
+        <button type="button " class="btn-close bg-warning text-white" (click)="cerrarDetalleDonacion()" aria-label="Close"></button>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body  p-4">
+        <div class="mb-3">
+          <h6><strong>Fecha:</strong> {{ selectedDonacion?.fechaEntrega | date:'dd/MM/yyyy' }}</h6>
+          <h6><strong>Banco de Alimentos:</strong> {{ selectedDonacion?.bancoDeAlimentos.nombre }}</h6>
+          <h6><strong>Transporte:</strong> {{ selectedDonacion?.transporte.nombreTransporte }}</h6>
+          <h6><strong>Total Donación:</strong> {{ selectedDonacion?.totalDonacion | number:'1.2-2' }} €</h6>
+        </div>
+        <hr class="my-4">
+        <h5 class="mb-3">Productos Donados:</h5>
+        <div *ngIf="selectedDonacion?.lineasProducto && selectedDonacion.lineasProducto.length > 0; else noProductos">
+          <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let linea of selectedDonacion.lineasProducto">
+                <td>{{linea.producto?.nombre || 'Producto desconocido'}}</td>
+                <td>{{linea.cantidad}}</td>
+                <td>{{linea.precioUnitario | number:'1.2-2' }} €</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </div>
+        <ng-template #noProductos>
+          <div class="alert alert-info">No hay productos donados en esta donación.</div>
+        </ng-template>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" (click)="cerrarDetalleDonacion()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

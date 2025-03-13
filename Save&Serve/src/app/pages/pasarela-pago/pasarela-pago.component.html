@@ -1,0 +1,107 @@
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <div class="row g-4 w-100">
+      <!-- Método de pago -->
+      <div class="col-lg-6 col-md-12">
+        <h5 class="mb-3">Método de pago</h5>
+        <div class="card p-3">
+          <div class="accordion" id="accordionExample">
+            <!-- Paypal Method -->
+            <div class="card">
+              <div class="card-header p-0">
+                <h2 class="mb-0">
+                  <button class="btn btn-light w-100 text-start p-3" id="paypalButton"
+                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                    aria-expanded="false" aria-controls="collapseTwo">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <span>Paypal</span>
+                      <img src="https://i.imgur.com/7kQEsHU.png" width="30">
+                    </div>
+                  </button>
+                </h2>
+              </div>
+              <div id="collapseTwo" class="collapse" data-bs-parent="#accordionExample">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label class="form-label">Correo de Paypal</label>
+                    <input type="email" id="paypalEmail" class="form-control" placeholder="Correo de Paypal">
+                    <small class="text-danger d-none" id="paypalEmailError">Correo inválido o vacío</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Credit Card Method -->
+            <div class="card mt-2">
+              <div class="card-header p-0">
+                <h2 class="mb-0">
+                  <button class="btn btn-light w-100 text-start p-3" id="cardButton"
+                    data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <span>Tarjeta de crédito</span>
+                    </div>
+                  </button>
+                </h2>
+              </div>
+              <div id="collapseOne" class="collapse show" data-bs-parent="#accordionExample">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label class="form-label">Número de tarjeta</label>
+                    <input type="text" id="cardNumber" class="form-control" placeholder="0000 0000 0000 0000" maxlength="16">
+                    <small class="text-danger d-none" id="cardNumberError">Número de tarjeta inválido o vacío</small>
+                  </div>
+  
+                  <div class="row mt-3 mb-3">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">Fecha de expiración</label>
+                        <input type="text" id="expiryDate" class="form-control" placeholder="MM/YY" maxlength="5">
+                        <small class="text-danger d-none" id="expiryDateError">Fecha inválida o vacía</small>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="form-label">CVC/CVV</label>
+                        <input type="text" id="cvv" class="form-control" placeholder="000" maxlength="4">
+                        <small class="text-danger d-none" id="cvvError">CVC inválido o vacío</small>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-muted d-block mt-2">
+                    <i class="fa fa-lock"></i> Tu transacción es segura con SSL certificado
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Resumen de compra -->
+      <div class="col-lg-6 col-md-12">
+        <h5 class="mb-3">Resumen</h5>
+        <div class="card p-3">
+          <div class="d-flex justify-content-between p-3">
+            <div class="d-flex flex-column">
+              <span id="planType">{{ plan }}</span>
+            </div>
+            <div class="mt-1">
+              <sup class="h4" id="price">{{ price.toFixed(2) }}€</sup>
+              <span class="text-muted"> /Mes</span>
+            </div>
+          </div>
+          <hr>
+          <div class="p-3 d-flex justify-content-between">
+            <div class="d-flex flex-column">
+              <span>Total</span>
+            </div>
+            <span id="totalPriceAmount">{{ price.toFixed(2) }}€</span>
+          </div>
+          <div class="p-3">
+            <button class="btn btn-primary w-100 py-2" id="payButton">Pagar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

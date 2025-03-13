@@ -1,0 +1,63 @@
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title">Mis Donaciones</h5>
+    </div>
+    <div class="card-body">
+      <div *ngIf="loadingDonaciones">
+        <div class="d-flex justify-content-center align-items-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="errorDonaciones" class="alert alert-danger">
+        {{errorDonaciones}}
+      </div>
+      <div *ngIf="donaciones.length === 0" class="alert alert-info">
+        No se han realizado donaciones aún
+      </div>
+      <div *ngIf="donaciones.length > 0" class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Banco de Alimentos</th>
+              <th>Transporte</th>
+              <th>Total Donación</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let donacion of donaciones">
+              <td>{{donacion.fechaEntrega | date:'dd/MM/yyyy'}}</td>
+              <td>{{donacion.bancoDeAlimentos.nombre}}</td>
+              <td>{{donacion.transporte.nombreTransporte}}</td>
+              <td>{{donacion.totalDonacion | number:'1.2-2'}} €</td>
+              <td>
+                <span class="badge"
+                      [ngClass]="{
+                        'bg-warning': donacion.estadoEnvio === 'PENDIENTE',
+                        'bg-success': donacion.estadoEnvio === 'ENVIADO',
+                        'bg-danger': donacion.estadoEnvio === 'ENTREGADO'
+                      }">
+                  {{donacion.estadoEnvio}}
+                </span>
+              </td>
+              <td>
+               
+                <button class="btn btn-sm btn-primary" (click)="updateEstadoDonacion(donacion.id, 'ENVIADO')">
+                  Marcar como Enviado
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="updateEstadoDonacion(donacion.id, 'ENTREGADO')">
+                  Marcar como Entregado
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
