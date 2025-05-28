@@ -1,14 +1,4 @@
-// import { Component } from '@angular/core';
 
-// @Component({
-//   selector: 'app-donacion',
-//   imports: [],
-//   templateUrl: './donacion.component.html',
-//   styleUrl: './donacion.component.scss'
-// })
-// export class DonacionComponent {
-
-// }
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -39,36 +29,6 @@ export class DonacionComponent implements OnInit {
     this.loadCurrentEmpresa();
   }
 
-  // loadCurrentEmpresa() {
-  //   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  //   if (userData && userData.email) {
-  //     this.empresaService.getEmpresaByEmail(userData.email).subscribe({
-  //       next: (data) => {
-  //         this.empresa = data;
-  //         this.loadDonacionesEmpresa(data.id);
-  //       },
-  //       error: (error) => {
-  //         console.error('Error al cargar empresa:', error);
-  //       }
-  //     });
-  //   }
-  // }
-
-  // loadDonacionesEmpresa(empresaId: number) {
-  //   this.loadingDonaciones = true;
-  //   this.donacionService.getDonacionesByEmpresa(empresaId).subscribe({
-  //     next: (data) => {
-  //       this.donaciones = data;
-  //       this.loadingDonaciones = false;
-  //     },
-  //     error: (error) => {
-  //       console.error('Error al cargar donaciones:', error);
-  //       this.errorDonaciones = 'Error al cargar las donaciones';
-  //       this.loadingDonaciones = false;
-  //     }
-  //   });
-  // }
-  // donacion.component.ts
   loadDonacionesEmpresa(empresaId: number) {
     this.loadingDonaciones = true;
     this.errorDonaciones = null;
@@ -124,10 +84,7 @@ export class DonacionComponent implements OnInit {
       console.error('Error al procesar datos de usuario:', error);
     }
   }
-  // verDetalleDonacion(donacion: any) {
-  //   // Implementar lógica para mostrar detalles de la donación
-  //   console.log('Detalle de donación:', donacion);
-  // }
+
   selectedDonacion: any = null;
 
   verDetalleDonacion(donacion: any) {

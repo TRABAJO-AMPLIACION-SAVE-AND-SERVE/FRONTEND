@@ -99,8 +99,48 @@
       {{ mensaje }}
     </div>
   
+    <table class="table table-hover text-center align-middle mt-4 mb-5">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Telefono</th>
+          <th>Dirección</th>
+          <th>Email</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let empresa of empresas">
+          <td><strong>{{ empresa.nombre }}</strong></td>
+          <td>{{ empresa.telefono }}</td>
+          <td>{{ empresa.direccion }}</td>
+          <td>{{ empresa.email }}</td>
+          <td>
+            <span class="badge" [ngClass]="esValidada(empresa) ? 'bg-success' : 'bg-danger'">
+              <i class="bi" [ngClass]="esValidada(empresa) ? 'bi-check-circle' : 'bi-x-circle'"></i>
+              {{ esValidada(empresa) ? 'Validado' : 'No validado' }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm" 
+                    [ngClass]="esValidada(empresa) ? 'btn-outline-danger' : 'btn-outline-success'"
+                    (click)="toggleValidacion(empresa)">
+              <i class="bi" [ngClass]="esValidada(empresa) ? 'bi-x-circle' : 'bi-check-circle'"></i>
+              {{ esValidada(empresa) ? ' Quitar Validación' : ' Validar' }}
+            </button>
+            <button class="btn btn-sm btn-outline-primary ms-2" (click)="editarEmpresa(empresa)">
+              <i class="bi bi-pencil"></i> Editar
+            </button>
+            <button class="btn btn-sm btn-outline-secondary ms-2" (click)="eliminarEmpresa(empresa.id!)">
+              <i class="bi bi-trash"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   
-
+<!-- 
   <table class="table table-hover text-center align-middle mt-4 mb-5">
     <thead class="table-dark">
       <tr>
@@ -140,5 +180,5 @@
         </td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
 </div>

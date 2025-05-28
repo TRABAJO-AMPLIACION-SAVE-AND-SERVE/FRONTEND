@@ -1,0 +1,233 @@
+<div class="container-fluid mt-4">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Gestión de Donaciones</h5>
+        
+        <!-- Filtros -->
+        <div class="d-flex gap-2">
+          <select class="form-select form-select-sm" [(ngModel)]="filtroEstado" (change)="aplicarFiltro()">
+            <option value="">Todos los estados</option>
+            <option value="PENDIENTE">Pendientes</option>
+            <option value="ENVIADO">Enviadas</option>
+            <option value="ENTREGADO">Entregadas</option>
+            <option value="DENEGADO">Denegadas</option>
+          </select>
+          <button class="btn btn-outline-secondary btn-sm" (click)="recargarDonaciones()">
+            <i class="bi bi-arrow-clockwise"></i> Actualizar
+          </button>
+        </div>
+      </div>
+  
+      <div class="card-body">
+        <!-- Loading -->
+        <div *ngIf="loadingDonaciones" class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando donaciones...</span>
+          </div>
+        </div>
+  
+        <!-- Error -->
+        <div *ngIf="errorDonaciones" class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle"></i> {{errorDonaciones}}
+        </div>
+  
+        <!-- Mensaje de éxito -->
+        <div *ngIf="mensaje" class="alert alert-success">
+          <i class="bi bi-check-circle"></i> {{mensaje}}
+        </div>
+  
+        <!-- Sin donaciones -->
+        <div *ngIf="!loadingDonaciones && donacionesFiltradas.length === 0 && !errorDonaciones" class="alert alert-info">
+          <i class="bi bi-info-circle"></i> No hay donaciones para mostrar.
+        </div>
+  
+        <!-- Tabla de donaciones -->
+        <div *ngIf="donacionesFiltradas.length > 0" class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Empresa</th>
+                <th>Banco de Alimentos</th>
+                <th>Fecha Entrega</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let donacion of donacionesFiltradas">
+                <td><strong>#{{donacion.idDonacion}}</strong></td>
+                <td>
+                  <div>{{donacion.empresa?.nombre}}</div>
+                  <small class="text-muted">{{donacion.empresa?.ciudad}}</small>
+                </td>
+                <td>
+                  <div>{{donacion.bancoDeAlimentos?.nombre}}</div>
+                  <small class="text-muted">{{donacion.bancoDeAlimentos?.ciudad}}</small>
+                </td>
+                <td>{{donacion.fechaEntrega | date:'dd/MM/yyyy'}}</td>
+                <td>{{donacion.totalDonacion | currency:'EUR':'symbol':'1.2-2'}}</td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'bg-warning text-dark': donacion.estadoEnvio === 'PENDIENTE',
+                    'bg-primary': donacion.estadoEnvio === 'ENVIADO',
+                    'bg-success': donacion.estadoEnvio === 'ENTREGADO',
+                    'bg-danger': donacion.estadoEnvio === 'DENEGADO'
+                  }">
+                    <i class="bi" [ngClass]="{
+                      'bi-clock': donacion.estadoEnvio === 'PENDIENTE',
+                      'bi-truck': donacion.estadoEnvio === 'ENVIADO',
+                      'bi-check-circle': donacion.estadoEnvio === 'ENTREGADO',
+                      'bi-x-circle': donacion.estadoEnvio === 'DENEGADO'
+                    }"></i>
+                    {{donacion.estadoEnvio}}
+                  </span>
+                </td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <!-- Botón Ver Detalle -->
+                    <button class="btn btn-sm btn-outline-info" 
+                            (click)="verDetalle(donacion)" 
+                            title="Ver detalles">
+                      <i class="bi bi-eye"></i>
+                    </button>
+  
+                    <!-- Botones de estado (solo para PENDIENTES) -->
+                    <ng-container *ngIf="donacion.estadoEnvio === 'PENDIENTE'">
+                      <button class="btn btn-sm btn-outline-success" 
+                              (click)="aprobarDonacion(donacion)"
+                              title="Aprobar donación">
+                        <i class="bi bi-check-lg"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger" 
+                              (click)="denegarDonacion(donacion)"
+                              title="Denegar donación">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </ng-container>
+  
+                    <!-- Botones para cambiar estado (ENVIADO/ENTREGADO) -->
+                    <ng-container *ngIf="donacion.estadoEnvio === 'ENVIADO'">
+                      <button class="btn btn-sm btn-outline-primary" 
+                              (click)="marcarComoEntregado(donacion)"
+                              title="Marcar como entregado">
+                        <i class="bi bi-check-circle"></i>
+                      </button>
+                    </ng-container>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal para Ver Detalle -->
+  <div class="modal" id="detalleModal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            <i class="bi bi-info-circle"></i> Detalle de Donación #{{selectedDonacion?.idDonacion}}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="cerrarDetalle()"></button>
+        </div>
+        <div class="modal-body" *ngIf="selectedDonacion">
+          <!-- Información general -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h6><strong>Empresa Donante:</strong></h6>
+              <p>{{selectedDonacion.empresa?.nombre}}<br>
+                 <small class="text-muted">{{selectedDonacion.empresa?.email}}</small><br>
+                 <small class="text-muted">{{selectedDonacion.empresa?.ciudad}}</small>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <h6><strong>Banco de Alimentos:</strong></h6>
+              <p>{{selectedDonacion.bancoDeAlimentos?.nombre}}<br>
+                 <small class="text-muted">{{selectedDonacion.bancoDeAlimentos?.email}}</small><br>
+                 <small class="text-muted">{{selectedDonacion.bancoDeAlimentos?.ciudad}}</small>
+              </p>
+            </div>
+          </div>
+  
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <h6><strong>Fecha de Entrega:</strong></h6>
+              <p>{{selectedDonacion.fechaEntrega | date:'dd/MM/yyyy'}}</p>
+            </div>
+            <div class="col-md-4">
+              <h6><strong>Estado:</strong></h6>
+              <span class="badge fs-6" [ngClass]="{
+                'bg-warning text-dark': selectedDonacion.estadoEnvio === 'PENDIENTE',
+                'bg-primary': selectedDonacion.estadoEnvio === 'ENVIADO',
+                'bg-success': selectedDonacion.estadoEnvio === 'ENTREGADO',
+                'bg-danger': selectedDonacion.estadoEnvio === 'DENEGADO'
+              }">
+                {{selectedDonacion.estadoEnvio}}
+              </span>
+            </div>
+            <div class="col-md-4">
+              <h6><strong>Total:</strong></h6>
+              <p class="h5 text-success">{{selectedDonacion.totalDonacion | currency:'EUR':'symbol':'1.2-2'}}</p>
+            </div>
+          </div>
+  
+          <!-- Información del transporte -->
+          <div class="mb-4" *ngIf="selectedDonacion.transporte">
+            <h6><strong>Transporte:</strong></h6>
+            <p>{{selectedDonacion.transporte?.nombreTransporte}}<br>
+               <small class="text-muted">Tipos: {{selectedDonacion.transporte?.tipoTransporte?.join(', ')}}</small>
+            </p>
+          </div>
+  
+          <!-- Productos donados -->
+          <h6><strong>Productos Donados:</strong></h6>
+          <div *ngIf="selectedDonacion.lineasProducto && selectedDonacion.lineasProducto.length > 0; else noProductos">
+            <div class="table-responsive">
+              <table class="table table-sm table-striped">
+                <thead class="table-secondary">
+                  <tr>
+                    <th>Producto</th>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unit.</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let linea of selectedDonacion.lineasProducto">
+                    <td>{{linea.producto?.nombre || 'N/A'}}</td>
+                    <td>
+                      <span class="badge bg-secondary">{{linea.producto?.tipoProducto || 'N/A'}}</span>
+                    </td>
+                    <td>{{linea.cantidad}}</td>
+                    <td>{{linea.precioUnitario | currency:'EUR':'symbol':'1.2-2'}}</td>
+                    <td>{{linea.subtotal | currency:'EUR':'symbol':'1.2-2'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <ng-template #noProductos>
+            <div class="alert alert-warning">No hay productos registrados para esta donación.</div>
+          </ng-template>
+        </div>
+        <div class="modal-footer">
+          <!-- Acciones desde el modal -->
+          <ng-container *ngIf="selectedDonacion?.estadoEnvio === 'PENDIENTE'">
+            <button type="button" class="btn btn-success" (click)="aprobarDonacion(selectedDonacion)">
+              <i class="bi bi-check-lg"></i> Aprobar
+            </button>
+            <button type="button" class="btn btn-danger" (click)="denegarDonacion(selectedDonacion)">
+              <i class="bi bi-x-lg"></i> Denegar
+            </button>
+          </ng-container>
+          <button type="button" class="btn btn-secondary" (click)="cerrarDetalle()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -3,18 +3,7 @@
     <div class="card-header">
       <h5 class="card-title">Mis Donaciones</h5>
     </div>
-    <!-- <div class="card-body">
-        @if (loadingDonaciones) {
-          <div class="d-flex justify-content-center align-items-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Cargando...</span>
-            </div>
-          </div>
-
-        } @else if (errorDonaciones) {
-          <div class="alert alert-danger">{{errorDonaciones}}</div>
-        } @else if (donaciones.length === 0) {
-          <div class="alert alert-info">No se han realizado donaciones aún</div> -->
+  
     <div class="card-body">
       @if (loadingDonaciones) {
       <div class="d-flex justify-content-center">
@@ -53,9 +42,6 @@
                 </span>
               </td>
               <td>
-                <!-- <button class="btn btn-sm btn-info" (click)="verDetalleDonacion(donacion)">
-                        Ver Detalle
-                      </button> -->
                 <button class="btn btn-sm btn-info"  (click)="verDetalleDonacion(donacion)">
                   Ver Detalle
                 </button>

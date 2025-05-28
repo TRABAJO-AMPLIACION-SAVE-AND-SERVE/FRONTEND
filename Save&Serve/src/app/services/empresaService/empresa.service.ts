@@ -18,9 +18,19 @@ export interface RespuestaPaginada<T> {
 })
 export class EmpresaService {
  
-  private url = 'http://localhost:9000/empresas'; //nube
+  private url = 'http://localhost:9000/empresas'; //base url de la API
 
   constructor(private http: HttpClient) { }
+
+  //NEW: Metodo para alternar el estado de validacion
+  toggleValidation(id: number, validated: boolean): Observable<Empresa> {
+    const requestBody = { validated: validated }; // ← Estructura correcta
+    return this.http.put<Empresa>(`${this.url}/${id}/validate`, requestBody);
+  }
+  //NEW: Metodo para obtener solo las empresas validadas
+  getValidatedEmpresas(): Observable<Empresa[]> {
+    return this.http.get<Empresa[]>(`${this.url}?documentacionValidada=true`);
+  }
 
   getAll(): Observable<Empresa[]> {
     return this.http.get<Empresa[]>(this.url);
@@ -68,7 +78,8 @@ export class EmpresaService {
 
     
   }
-  getTotalDonaciones(empresaId: number): Observable<number> {
-    return this.http.get<number>(`${this.url}/${empresaId}/total-donaciones`);
-  }
+ // NEW: Método para obtener total de donaciones entregadas
+ getTotalDonacionesEntregadas(empresaId: number): Observable<number> {
+  return this.http.get<number>(`${this.url}/${empresaId}/total-donaciones-entregadas`);
+}
 }

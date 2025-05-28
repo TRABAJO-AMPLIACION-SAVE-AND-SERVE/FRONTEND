@@ -25,7 +25,7 @@ export class GestionBeneficiariosComponent implements OnInit {
     telefono: '',
     direccion: '',
     email: '',
-    documentacionValidada: false, // Validaacin por defecto en falso
+    documentacionValidada: '',
     ciudad: '',
     contrasenia: ''
   };
@@ -66,13 +66,14 @@ export class GestionBeneficiariosComponent implements OnInit {
 
   }
   cargarBeneficiarios() {
-    this.bancoAlimentoService.getAll().subscribe(data => {
-      const validados = JSON.parse(localStorage.getItem('beneficiariosValidados') || '{}');
-
-      this.beneficiarios = data.map((beneficiario: any) => ({
-        ...beneficiario,
-        documentacionValidada: validados[beneficiario.id] === true
-      }));
+    this.bancoAlimentoService.getAll().subscribe({
+      next: (data) => {
+        this.beneficiarios = data; // New: Asignar directamente los datos obtenidos de la API
+        console.log('Beneficiarios cargados:', this.beneficiarios);
+      },
+      error: (error) => {
+        console.error('Error al cargar beneficiarios:', error);
+      }
     });
   }
   agregarBeneficiario() {
@@ -117,17 +118,34 @@ export class GestionBeneficiariosComponent implements OnInit {
     return beneficiario.documentacionValidada === true;
   }
 
-  toggleValidacion(beneficiario: any) {
-    beneficiario.documentacionValidada = !beneficiario.documentacionValidada;
 
-    let validados = JSON.parse(localStorage.getItem('beneficiariosValidados') || '{}');
-    if (beneficiario.documentacionValidada) {
-      validados[beneficiario.id] = true;
-    } else {
-      delete validados[beneficiario.id];
-    }
-
-    localStorage.setItem('beneficiariosValidados', JSON.stringify(validados));
+  //New expansion
+  toggleValidacion(beneficiario: BancoDeAlimentos) {
+    console.log('Estado actual:', beneficiario.documentacionValidada);
+    const nuevoEstado = !beneficiario.documentacionValidada;
+    console.log('Cambiando a:', nuevoEstado);
+    
+    this.bancoAlimentoService.toggleValidation(beneficiario.id!, nuevoEstado).subscribe({
+      next: (beneficiarioActualizado) => {
+        console.log('Respuesta del backend:', beneficiarioActualizado);
+        
+        // Actualizar en el array local
+        const index = this.beneficiarios.findIndex(b => b.id === beneficiario.id);
+        if (index !== -1) {
+          this.beneficiarios[index] = beneficiarioActualizado;
+        }
+        
+        const mensaje = nuevoEstado ? 'validado' : 'desvalidado';
+        this.mensaje = `Beneficiario ${beneficiarioActualizado.nombre} ${mensaje} correctamente`;
+        setTimeout(() => (this.mensaje = ''), 3000);
+      },
+      error: (error) => {
+        console.error('Error al cambiar validación:', error);
+        console.error('Detalles del error:', error.error);
+        this.mensaje = 'Error al cambiar el estado de validación';
+        setTimeout(() => (this.mensaje = ''), 3000);
+      }
+    });
   }
 
 

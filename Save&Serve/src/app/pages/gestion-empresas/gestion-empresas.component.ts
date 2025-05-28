@@ -47,7 +47,7 @@ export class GestionEmpresasComponent implements OnInit {
       cif: ['', [Validators.required, Validators.pattern(/^[A-Z][0-9]{8}$/)]], 
       ciudad: ['', Validators.required],
       suscripcion: [Suscripcion.BASICA, Validators.required],
-      documentacionValidada: [false],
+      documentacionValidada: [''],
       tipo: ['', Validators.required],
       contrasenia: ['', [Validators.required, Validators.minLength(6)]]
     });
@@ -60,14 +60,16 @@ export class GestionEmpresasComponent implements OnInit {
 
   }
 
+  // New: asi usamos los datos del backend directamente
   cargarEmpresas() {
-    this.empresaService.getAll().subscribe(data => {
-      const validados = JSON.parse(localStorage.getItem('empresasValidadas') || '{}');
-      this.empresas = data.map((empresa: any) => ({
-        ...empresa,
-        documentacionValidada: validados[empresa.id] === true,
-        tipo: empresa.tipo || ''
-      }));
+    this.empresaService.getAll().subscribe({
+      next: (data) => {
+        this.empresas = data; 
+        console.log('Empresas cargadas:', this.empresas);
+      },
+      error: (error) => {
+        console.error('Error al cargar empresas:', error);
+      }
     });
   }
 
@@ -101,18 +103,41 @@ export class GestionEmpresasComponent implements OnInit {
     this.empresaService.delete(id).subscribe(() => this.cargarEmpresas());
   }
 
-  toggleValidacion(empresa: Empresa) {
-    empresa.documentacionValidada = !empresa.documentacionValidada;
-    let validados = JSON.parse(localStorage.getItem('empresasValidadas') || '{}');
-    if (empresa.id !== undefined) {
-      empresa.documentacionValidada ? (validados[empresa.id] = true) : delete validados[empresa.id];
-    }
-    localStorage.setItem('empresasValidadas', JSON.stringify(validados));
-  }
 
-  esValidada(empresa: any): boolean {
-    return empresa.documentacionValidada === true;
-  }
+  //NEW PARA LA EXPANSION
+ // Agregar este método
+ toggleValidacion(empresa: Empresa) {
+  console.log('Estado actual:', empresa.documentacionValidada);
+  const nuevoEstado = !empresa.documentacionValidada;
+  console.log('Cambiando a:', nuevoEstado);
+  
+  this.empresaService.toggleValidation(empresa.id!, nuevoEstado).subscribe({
+    next: (empresaActualizada) => {
+      console.log('Respuesta del backend:', empresaActualizada);
+      
+      // Actualizar la empresa en el array local
+      const index = this.empresas.findIndex(e => e.id === empresa.id);
+      if (index !== -1) {
+        this.empresas[index] = empresaActualizada;
+      }
+      
+      const mensaje = nuevoEstado ? 'validada' : 'desvalidada';
+      this.mensaje = `Empresa ${empresaActualizada.nombre} ${mensaje} correctamente`;
+      setTimeout(() => (this.mensaje = ''), 3000);
+    },
+    error: (error) => {
+      console.error('Error al cambiar validación:', error);
+      console.error('Detalles del error:', error.error);
+      this.mensaje = 'Error al cambiar el estado de validación';
+      setTimeout(() => (this.mensaje = ''), 3000);
+    }
+  });
+}
+
+esValidada(empresa: any): boolean {
+  return empresa.documentacionValidada === true;
+}
+
 
   limpiarFormulario() {
     this.empresaForm.reset({
@@ -130,4 +155,7 @@ export class GestionEmpresasComponent implements OnInit {
     this.empresaIdEdicion = undefined;
     this.modoEdicion = false;
   }
+
+
+
 }

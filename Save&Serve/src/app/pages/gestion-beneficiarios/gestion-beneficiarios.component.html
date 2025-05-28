@@ -107,7 +107,7 @@
         <td>{{ beneficiario.telefono }}</td>
         <td>{{ beneficiario.direccion }}</td>
         <td>{{ beneficiario.email }}</td>
-        <td>
+        <!-- <td>
           <span class="badge" [ngClass]="esValidada(beneficiario) ? 'bg-success' : 'bg-danger'">
             <i class="bi" [ngClass]="esValidada(beneficiario) ? 'bi-check-circle' : 'bi-x-circle'"></i>
             {{ esValidada(beneficiario) ? 'Validado' : 'No validado' }}
@@ -118,7 +118,22 @@
             (click)="toggleValidacion(beneficiario)">
             <i class="bi" [ngClass]="esValidada(beneficiario) ? 'bi-x-circle' : 'bi-check-circle'"></i>
             {{ esValidada(beneficiario) ? ' Quitar' : ' Validar' }}
-          </button>
+          </button> -->
+          <!-- DESDE AQUI EXPANSION -->
+          <td>
+            <span class="badge" [ngClass]="esValidada(beneficiario) ? 'bg-success' : 'bg-danger'">
+              <i class="bi" [ngClass]="esValidada(beneficiario) ? 'bi-check-circle' : 'bi-x-circle'"></i>
+              {{ esValidada(beneficiario) ? 'Validado' : 'No validado' }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm" 
+                    [ngClass]="esValidada(beneficiario) ? 'btn-outline-danger' : 'btn-outline-success'"
+                    (click)="toggleValidacion(beneficiario)">
+              <i class="bi" [ngClass]="esValidada(beneficiario) ? 'bi-x-circle' : 'bi-check-circle'"></i>
+              {{ esValidada(beneficiario) ? ' Quitar Validación' : ' Validar' }}
+            </button>
+            <!-- //HASTA AQUI  -->
           <button class="btn btn-sm btn-outline-primary ms-2" (click)="editarBeneficiario(beneficiario)">
             <i class="bi bi-pencil">Editar</i>
           </button>

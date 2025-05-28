@@ -1,39 +1,202 @@
-<div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <h1 class="text-center mb-3">Edicion Perfil</h1>
-        <h2 class="text-center mb-4 text-primary">{{ bancoAlimentos.nombre }}</h2>
-        <div class="p-4 border rounded-lg shadow">
-          <div class="form-group mb-3" *ngFor="let field of ['nombre','direccion', 'telefono', 'email', 'ciudad']">
-            <div class="row align-items-center">
-              <div class="col-4">
-                <label class="font-weight-bold">{{field | titlecase}}:</label>
-              </div>
-              <div class="col-8">
-                @if (!editing[field]) {
-                  <div class="d-flex align-items-center">
-                    <span class="flex-grow-1">{{bancoAlimentos[field]}}</span>
-                    <button class="btn btn-link btn-sm text-primary p-0 ms-2" (click)="startEditing(field)">
+
+  
+    <div class="row">
+      <!-- Panel de edición de perfil -->
+      <div class="col-lg-4 mb-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-white border-bottom-0 py-3">
+            <h4 class="card-title mb-0 text-primary">
+              <i class="bi bi-person-gear me-2"></i>Edición de Perfil
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="form-group mb-3" *ngFor="let field of ['nombre','direccion', 'telefono', 'email', 'ciudad']">
+              <div class="row align-items-center">
+                <div class="col-4">
+                  <label class="fw-bold text-muted">{{field | titlecase}}:</label>
+                </div>
+                <div class="col-8">
+                  <div *ngIf="!editing[field]" class="d-flex align-items-center">
+                    <span class="flex-grow-1 text-truncate">{{bancoAlimentos[field]}}</span>
+                    <button class="btn btn-outline-primary btn-sm ms-2" (click)="startEditing(field)">
                       <i class="bi bi-pencil"></i>
                     </button>
                   </div>
-                } @else {
-                  <div class="input-group">
-                    <input [(ngModel)]="bancoAlimentos[field]" class="form-control form-control-sm" [placeholder]="'Ingrese ' + field">
-                    <button class="btn btn-outline-secondary btn-sm" (click)="cancelEdit(field)" type="button">
+                  <div *ngIf="editing[field]" class="input-group">
+                    <input [(ngModel)]="bancoAlimentos[field]" 
+                           class="form-control form-control-sm" 
+                           [placeholder]="'Ingrese ' + field">
+                    <button class="btn btn-outline-secondary btn-sm" 
+                            (click)="cancelEdit(field)" 
+                            type="button">
                       <i class="bi bi-x"></i>
                     </button>
                   </div>
-                }
+                </div>
               </div>
             </div>
+            <div class="d-flex justify-content-center mt-4" *ngIf="hasChanges">
+              <button class="btn btn-success btn-lg px-4" (click)="saveChanges()">
+                <i class="bi bi-check-circle me-2"></i>Guardar Cambios
+              </button>
+            </div>
           </div>
-          <div class="d-flex justify-content-center">
-            @if (hasChanges) {
-            <button class="btn btn-success mt-3" (click)="saveChanges()">Validar Cambios</button>
-            }
+        </div>
+      </div>
+  
+      <!-- Panel de donaciones -->
+      <div class="col-lg-8 mb-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-header bg-white border-bottom-0 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="card-title mb-0 text-primary">
+                <i class="bi bi-gift me-2"></i>Donaciones Recibidas
+              </h4>
+              <span class="badge bg-primary rounded-pill">{{ donaciones.length }} donaciones</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Loading state -->
+            <div *ngIf="loadingDonaciones" class="text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+              <p class="mt-3 text-muted">Cargando donaciones...</p>
+            </div>
+  
+            <!-- Error state -->
+            <div *ngIf="errorDonaciones" class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle me-2"></i>{{ errorDonaciones }}
+            </div>
+  
+            <!-- Empty state -->
+            <div *ngIf="!loadingDonaciones && donaciones.length === 0 && !errorDonaciones" 
+                 class="text-center py-5">
+              <i class="bi bi-inbox display-1 text-muted"></i>
+              <h5 class="mt-3 text-muted">No hay donaciones disponibles</h5>
+              <p class="text-muted">Las donaciones aparecerán aquí una vez que sean validadas por el administrador.</p>
+            </div>
+  
+            <!-- Lista de donaciones -->
+            <div *ngIf="!loadingDonaciones && donaciones.length > 0" class="row">
+              <div class="col-12 mb-3" *ngFor="let donacion of donaciones; let i = index">
+                <div class="card border-start border-4" 
+                     [ngClass]="{
+                       'border-warning': donacion.estadoEnvio === 'ENVIADO',
+                       'border-success': donacion.estadoEnvio === 'ENTREGADO',
+                       'border-danger': donacion.estadoEnvio === 'DENEGADO'
+                     }">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <!-- Información de la donación -->
+                      <div class="col-md-6">
+                        <h6 class="card-title mb-2">
+                          <i class="bi bi-building me-2 text-primary"></i>
+                          {{ donacion.empresa?.nombre || 'Empresa no especificada' }}
+                        </h6>
+                        <div class="small text-muted mb-2">
+                          <div><i class="bi bi-calendar3 me-1"></i>{{ donacion.fechaEntrega | date:'dd/MM/yyyy' }}</div>
+                          <div><i class="bi bi-currency-euro me-1"></i>{{ donacion.totalDonacion | currency:'EUR':'symbol':'1.2-2' }}</div>
+                          <div><i class="bi bi-truck me-1"></i>{{ donacion.transporte?.nombreTransporte || 'Transporte no especificado' }}</div>
+                        </div>
+                      </div>
+  
+                      <!-- Estado y acciones -->
+                      <div class="col-md-6 text-md-end">
+                        <div class="mb-3">
+                          <span class="badge fs-6 px-3 py-2"
+                                [ngClass]="{
+                                  'bg-warning text-dark': donacion.estadoEnvio === 'ENVIADO',
+                                  'bg-success': donacion.estadoEnvio === 'ENTREGADO',
+                                  'bg-danger': donacion.estadoEnvio === 'DENEGADO'
+                                }">
+                            <i class="bi me-1" 
+                               [ngClass]="{
+                                 'bi-truck': donacion.estadoEnvio === 'ENVIADO',
+                                 'bi-check-circle': donacion.estadoEnvio === 'ENTREGADO',
+                                 'bi-x-circle': donacion.estadoEnvio === 'DENEGADO'
+                               }"></i>
+                            {{ donacion.estadoEnvio }}
+                          </span>
+                        </div>
+  
+                        <!-- Botones de acción solo para estado ENVIADO -->
+                        <div *ngIf="donacion.estadoEnvio === 'ENVIADO'" class="btn-group" role="group">
+                          <button class="btn btn-success btn-sm" 
+                                  (click)="actualizarEstadoDonacion(donacion.idDonacion, 'ENTREGADO')"
+                                  [disabled]="updatingStates.has(donacion.idDonacion)">
+                            <span *ngIf="updatingStates.has(donacion.idDonacion)" 
+                                  class="spinner-border spinner-border-sm me-1"></span>
+                            <i class="bi bi-check-circle me-1"></i>Confirmar Entrega
+                          </button>
+                          <button class="btn btn-danger btn-sm" 
+                                  (click)="actualizarEstadoDonacion(donacion.idDonacion, 'DENEGADO')"
+                                  [disabled]="updatingStates.has(donacion.idDonacion)">
+                            <span *ngIf="updatingStates.has(donacion.idDonacion)" 
+                                  class="spinner-border spinner-border-sm me-1"></span>
+                            <i class="bi bi-x-circle me-1"></i>Rechazar
+                          </button>
+                        </div>
+  
+                        <!-- Mensaje para estados finales -->
+                        <div *ngIf="donacion.estadoEnvio === 'ENTREGADO' || donacion.estadoEnvio === 'DENEGADO'" 
+                             class="small text-muted">
+                          <i class="bi bi-info-circle me-1"></i>
+                          Estado final - No se puede modificar
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- Detalles expandibles -->
+                    <div class="collapse" [id]="'collapse' + i">
+                      <hr>
+                      <div class="row">
+                        <div class="col-12">
+                          <h6 class="text-primary">Productos donados:</h6>
+                          <div *ngIf="donacion.lineasProducto && donacion.lineasProducto.length > 0">
+                            <div class="table-responsive">
+                              <table class="table table-sm">
+                                <thead>
+                                  <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unit.</th>
+                                    <th>Subtotal</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let linea of donacion.lineasProducto">
+                                    <td>{{ linea.producto?.nombre || 'Producto no especificado' }}</td>
+                                    <td>{{ linea.cantidad }}</td>
+                                    <td>{{ linea.precioUnitario | currency:'EUR':'symbol':'1.2-2' }}</td>
+                                    <td>{{ linea.subtotal | currency:'EUR':'symbol':'1.2-2' }}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <div *ngIf="!donacion.lineasProducto || donacion.lineasProducto.length === 0" 
+                               class="text-muted">
+                            No hay productos especificados
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- Botón para expandir detalles -->
+                    <div class="text-center mt-3">
+                      <button class="btn btn-outline-primary btn-sm" 
+                              type="button" 
+                              data-bs-toggle="collapse" 
+                              [attr.data-bs-target]="'#collapse' + i">
+                        <i class="bi bi-chevron-down me-1"></i>Ver detalles
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>

@@ -80,9 +80,10 @@ export const routes: Routes = [
     path: 'gestionEmpresas', 
     loadComponent: () => import('./pages/gestion-empresas/gestion-empresas.component').then(m => m.GestionEmpresasComponent) 
   },
-  { 
-    path: 'gestionTransportes', 
-    loadComponent: () => import('./pages/gestion-transportes/gestion-transportes.component').then(m => m.GestionTransportesComponent) 
+//New
+  {
+    path: 'gestionDonaciones', 
+    loadComponent: () => import('./components/pages/gestion-donaciones/gestion-donaciones.component').then(m => m.GestionDonacionesComponent) 
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 

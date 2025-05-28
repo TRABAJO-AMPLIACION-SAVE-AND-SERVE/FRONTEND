@@ -36,6 +36,10 @@ export class EmpresaDonacionComponent implements OnInit {
   donaciones: any[] = [];
   errorDonaciones: string | null = null;
 
+  // new
+  empresaValidada: boolean = false;
+  bancosValidados: any[] = []; // En lugar de bancos: any[]
+
   constructor(
     private empresaService: EmpresaService,
     private donacionService: DonacionService,
@@ -76,7 +80,7 @@ export class EmpresaDonacionComponent implements OnInit {
   ];
   ngOnInit() {
     this.loadLoggedInEmpresa();
-    this.loadBancos();
+    this.loadBancosValidados(); //new
     this.loadTransportes();
     this.loadAlergenos();
     this.ciudades.sort((a, b) => a.localeCompare(b));
@@ -122,12 +126,46 @@ actualizarTransportesDisponibles() {
   }
 
   
+  // loadLoggedInEmpresa() {
+  //   const userEmail = this.authService.getUserName();
+  //   if (userEmail) {
+  //     this.empresaService.getEmpresaByEmail(userEmail).subscribe({
+  //       next: (empresaData) => {
+  //         this.empresa = empresaData;
+  //         this.donacionForm.patchValue({
+  //           empresaId: empresaData.id
+  //         });
+  //       },
+  //       error: (error) => {
+  //         console.error('Error al cargar la empresa:', error);
+  //         alert('Error al cargar la información de la empresa');
+  //       }
+  //     });
+  //   }
+  // }
+
+
+  // loadBancos() {
+  //   this.loadingBancos = true;
+  //   this.donacionService.getBancos().subscribe({
+  //     next: (data) => {
+  //       this.bancos = data;
+  //       this.loadingBancos = false;
+  //     },
+  //     error: (error) => {
+  //       this.errorBancos = 'Error al cargar los bancos de alimentos';
+  //       this.loadingBancos = false;
+  //     }
+  //   });
+  // }
+
   loadLoggedInEmpresa() {
     const userEmail = this.authService.getUserName();
     if (userEmail) {
       this.empresaService.getEmpresaByEmail(userEmail).subscribe({
         next: (empresaData) => {
           this.empresa = empresaData;
+          this.empresaValidada = empresaData.documentacionValidada || false;
           this.donacionForm.patchValue({
             empresaId: empresaData.id
           });
@@ -140,12 +178,11 @@ actualizarTransportesDisponibles() {
     }
   }
 
-
-  loadBancos() {
+  loadBancosValidados() {
     this.loadingBancos = true;
-    this.donacionService.getBancos().subscribe({
+    this.donacionService.getBancosValidados().subscribe({ // Nuevo método
       next: (data) => {
-        this.bancos = data;
+        this.bancosValidados = data;
         this.loadingBancos = false;
       },
       error: (error) => {
