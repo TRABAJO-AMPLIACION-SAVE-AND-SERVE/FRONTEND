@@ -34,10 +34,11 @@
               <td>{{donacion.totalDonacion | number:'1.2-2'}} €</td>
               <td>
                 <span class="badge" [ngClass]="{
-                              'bg-warning': donacion.estadoEnvio === 'PENDIENTE',
-                              'bg-success': donacion.estadoEnvio === 'ENVIADO',
-                              'bg-danger': donacion.estadoEnvio === 'ENTREGADO'
-                            }">
+                  'bg-warning text-dark': donacion.estadoEnvio === 'PENDIENTE',
+                  'bg-info': donacion.estadoEnvio === 'ENVIADO',
+                  'bg-success': donacion.estadoEnvio === 'ENTREGADO',
+                  'bg-danger': donacion.estadoEnvio === 'DENEGADO'
+                }">
                   {{donacion.estadoEnvio}}
                 </span>
               </td>
